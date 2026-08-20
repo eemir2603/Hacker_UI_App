@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Hacker Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Header (Status Bar) -->
+        <header class="top-bar border-box">
+            <h1 class="logo">CYBERHACK DECRYPT</h1>
+            <div class="status-info">
+                <span>STATUS: <span class="highlight">CONNECTED</span></span>
+                <span>IP: <span class="highlight">127.0.0.1</span></span>
+                <span>SECURITY: <span class="highlight">LEVEL 1</span></span>
+            </div>
+            <button class="btn-neon">MAIN MENU</button>
+        </header>
+
+        <!-- Main Modules -->
+        <main class="modules-grid">
+            
+            <!-- Left Panel: Password Cracker (Simulation) -->
+            <section class="module border-box">
+    <h2>Network Port Scanner</h2>
+    <div class="input-group">
+        <label>Target IP or Domain:</label>
+        <input type="text" id="target_ip" placeholder="Hedef IP veya Domain girin..." class="text-neon">  </div>
+    
+    <div class="action-buttons">
+        <button class="btn-neon" onclick="startPortScan()">Start Scan</button>
+        <button class="btn-neon warning">Stop</button>
+    </div>
+
+    <div class="log-window" id="scan_logs">
+        <p>Port Scanner initialized. Enter target IP.</p>
+    </div>
+</section>
+            <!-- Right Panel: Encryption Tools -->
+            <section class="module border-box">
+                <h2>Encryption Tools</h2>
+                <div class="input-group">
+                    <label>Input Text:</label>
+                    <textarea placeholder="Enter text to encrypt/decrypt..."></textarea>
+                </div>
+
+                <div class="input-group divider">
+                    <label>Encryption Method:</label>
+                    <div class="button-group">
+                        <button class="btn-neon active">AES</button>
+                        <button class="btn-neon">DES</button>
+                        <button class="btn-neon">RSA</button>
+                        <button class="btn-neon">Base64</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Key (if required):</label>
+                    <input type="text" placeholder="Encryption key...">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-neon">Encrypt</button>
+                    <button class="btn-neon">Decrypt</button>
+                </div>
+
+                <div class="log-window large">
+                    <p>Encryption tool ready.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Terminal Log Screen -->
+        <footer class="bottom-log border-box">
+            <p>Decrypt module loaded. Select an operation to begin.</p>
+            <p>[1:20:15 AM] Establishing secure connection...</p>
+        </footer>
+    </div>
+<script>
+    function startPortScan() {
+        const target = document.getElementById('target_ip').value;
+        const logWindow = document.getElementById('scan_logs');
+        
+        logWindow.innerHTML = `<p>[*] Scanning ${target}...</p><p>Please wait...</p>`;
+
+        // Python'a emir gönderiyoruz
+        fetch('/api/scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ip: target })
+        })
+        .then(response => response.json())
+        .then(data => {
+            logWindow.innerHTML = `<p>[+] Scan complete for ${data.target}</p>`;
+            data.results.forEach(result => {
+                logWindow.innerHTML += `<p>${result}</p>`;
+            });
+        })
+        .catch((error) => {
+            logWindow.innerHTML = `<p style="color: red;">[!] Error: Check connection to Python backend.</p>`;
+        });
+    }
+</script>
+
+</body>
+</html>
